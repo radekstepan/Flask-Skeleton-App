@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+	<title>Flask Skeleton</title>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/reset.css') }}">
+</head>
+<body>
+    <header>
+        <div id="title">Flask Skeleton</div>
+        {% block nav %}{% endblock %}
+    </header>
+    <section>
+        <article>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if error or messages %}
+                <ul class="messages">
+                    {% if error %}
+                    <li class="error">{{ error }}</li>
+                    {% endif %}
+
+                    {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            {% endwith %}
+
+            {% block body %}{% endblock %}
+        </article>
+        <footer>Powered by Flask</footer>
+    </section>
+</body>
+</html>
