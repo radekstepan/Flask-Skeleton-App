@@ -5,14 +5,14 @@
 from flask import Flask
 
 # imports
+import config
 import libs.utils as utils
 
 def create_app(database):
     # create our little application :)
     app = Flask(__name__)
-    app.debug = True
-    app.config.from_object(__name__)
-    app.secret_key = 'jr/$^_^"%6{>=!1:Chx(bvK2h%SN?H@/1?X4K`J4=@fJ=1MvYs"k4h;-ty2vq'
+    app.config.from_object(config)
+    app.secret_key = config.SECRET_KEY
 
     # db import
     from libs.db import init_connection
@@ -34,5 +34,5 @@ def create_app(database):
     return app
 
 if __name__ == '__main__':
-    app = create_app(database='mydatabase')
-    app.run(port=5006)
+    app = create_app(database=config.MONGODB_DB)
+    app.run(port=config.FLASK_PORT)

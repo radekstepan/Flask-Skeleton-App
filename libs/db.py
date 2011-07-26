@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf -*-
 
+# config
+import config
+
 # pymongo
 from pymongo import Connection
 from bson.objectid import ObjectId
@@ -8,21 +11,29 @@ from bson.objectid import ObjectId
 db = None
 
 def init_connection(database):
-    '''initialize new database connection'''
+    """
+    initialize new database connection
+    """
     global db
 
-    connection = Connection()
+    connection = Connection(config.MONGODB_HOST, config.MONGODB_PORT)
     db = connection[database]
 
 def database_name():
-    '''get database name'''
+    """
+    get database name
+    """
     return db.database.database.name
 
 class Collection:
-    '''a generic collection api'''
+    """
+    a generic collection api
+    """
 
     def paginator(self, query, per_page):
-        '''link to Paginator class'''
+        """
+        link to Paginator class
+        """
         return Paginator(query, per_page)
 
     def find_one(self, id=None, where=None):
@@ -82,8 +93,6 @@ class Paginator(object):
         if page_number < 1:
             raise Exception("%s is less than 1." % page_number)
         if page_number > self.page_count:
-            #raise Exception("Page %s contains no results." \
-            #    % page_number)
             return None
 
         # apply pagination offsets and limits

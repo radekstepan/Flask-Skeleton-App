@@ -8,9 +8,16 @@ cfg = {
     'MONGODB_HOST' : 'localhost',
     'MONGODB_PORT' : 27017,
     'MONGODB_DB' : '',
+    'FLASK_PORT' : 5000,
     'DEBUG' : True,
     'SECRET_KEY' : ''
 }
+
+# flask app port
+while True:
+    cfg['FLASK_PORT'] = int(raw_input('Flask app port (usually 5000) ').strip())
+    if cfg['FLASK_PORT']:
+        break
 
 # mongodb host
 while True:
