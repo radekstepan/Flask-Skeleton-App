@@ -24,7 +24,7 @@ def create_app(database):
     from presenters.home import home
 
     # register modules
-    app.register_module(home)
+    app.register_blueprint(home)
 
     # template filters
     @app.template_filter('test_format')
