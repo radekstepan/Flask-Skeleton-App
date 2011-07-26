@@ -8,7 +8,11 @@ from flask import Flask
 import config
 import libs.utils as utils
 
+app = None
+
 def create_app(database):
+    global app
+    
     # create our little application :)
     app = Flask(__name__)
     app.config.from_object(config)

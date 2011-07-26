@@ -1,9 +1,17 @@
-import config
-from cherrypy import wsgiserver
-from app import app
+#!/usr/bin/python
+# -*- coding: utf -*-
 
-wsgi_apps = [('/', app)]
-server = wsgiserver.CherryPyWSGIServer(('0.0.0.0', config.FLASK_PORT), wsgi_apps, request_queue_size=500, server_name='localhost')
+# server
+from cherrypy import wsgiserver
+
+# app
+import app as flask
+import config
+
+app = flask.create_app(database=config.MONGODB_DB)
+
+d = wsgiserver.WSGIPathInfoDispatcher({'/': app})
+server = wsgiserver.CherryPyWSGIServer(('0.0.0.0', config.FLASK_PORT), d)
 
 if __name__ == '__main__':
     try:
