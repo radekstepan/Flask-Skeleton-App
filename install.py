@@ -5,49 +5,48 @@ import random, os
 
 # config settings to save
 cfg = {
-    'MONGODB_HOST' : 'localhost',
-    'MONGODB_PORT' : 27017,
-    'MONGODB_DB' : '',
     'FLASK_PORT' : 5000,
     'DEBUG' : True,
-    'SECRET_KEY' : ''
+    'SECRET_KEY' : '',
+    'MONGODB_HOST' : 'localhost',
+    'MONGODB_PORT' : 27017,
+    'MONGODB_DB' : ''
 }
 
 # flask app port
 while True:
-    cfg['FLASK_PORT'] = int(raw_input('Flask app port (usually 5000) ').strip())
-    if cfg['FLASK_PORT']:
+    input_port = raw_input('Flask app port (default 5000) ')
+
+    if not input_port:
+        cfg['FLASK_PORT'] = 5000
         break
 
-# mongodb host
-while True:
-    cfg['MONGODB_HOST'] = raw_input('MongoDB host (usually localhost): ').strip()
-    if cfg['MONGODB_HOST']:
-        break
-
-# mongodb port
-while True:
-    cfg['MONGODB_PORT'] = int(raw_input('MongoDB port (usually 27017) ').strip())
-    if cfg['MONGODB_PORT']:
-        break
-
-# mongodb database name
-while True:
-    cfg['MONGODB_DB'] = raw_input('MongoDB database: ').strip()
-    if cfg['MONGODB_DB']:
+    if input_port:
+        cfg['FLASK_PORT'] =  int(input_port.strip()) # Better to use Regex to contraint this
         break
 
 cfg['SECRET_KEY'] = ''.join([random.choice('./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') for i in range(30)])
 
+# write config.py
 python_code = []
 for key, value in cfg.items():
     if isinstance(value, str):
         value = "'" + value.replace("'", r"\'") + "'"
-    elif isinstance(value, list):
-        value = '[]'
     python_code.append("%s = %s" % (key, value))
 
 with open(os.getcwd() + '/config.py', 'w') as f:
     f.write('\n'.join(python_code))
 
-print('\nConfiguration file written successfully.\n')
+# write cherrypy.conf
+conf =\
+'''[global]
+server.socket_host = '0.0.0.0'
+server.socket_port = %i
+server.environment = "production"
+tree.mount = {'/' : create_flask_app.application}
+''' % cfg['FLASK_PORT']
+
+with open(os.getcwd() + '/cherrypy.conf', 'w') as f:
+    f.write(conf)
+
+print('\nConfiguration files written successfully.\n')
