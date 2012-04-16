@@ -22,7 +22,7 @@ def create_app(database):
     from libs.db import init_connection
 
     # db setup
-    init_connection(database)
+    if database: init_connection(database)
 
     # presenters
     from presenters.home import home
